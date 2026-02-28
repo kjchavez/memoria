@@ -1,0 +1,47 @@
+id: uk-2026
+title: "England 2026"
+destination: "London & Cornwall, England"
+dates:
+  start: 2026-05-21
+  end: 2026-05-28
+timezone: Europe/London
+locations:
+  - name: South Bank
+    lat: 51.5074
+    lng: -0.1157
+  - name: Borough Market
+    lat: 51.5055
+    lng: -0.0910
+  - name: National Theatre
+    lat: 51.5072
+    lng: -0.1149
+  - name: Selhurst Park
+    lat: 51.3983
+    lng: -0.0855
+  - name: Penzance
+    lat: 50.1186
+    lng: -5.5372
+  - name: Botallack Mine
+    lat: 50.1432
+    lng: -5.6895
+  - name: Holywell Bay
+    lat: 50.3927
+    lng: -5.1520
+  - name: St Michael's Mount
+    lat: 50.1171
+    lng: -5.4768
+  - name: Padstow
+    lat: 50.5399
+    lng: -4.9355
+  - name: St Ives
+    lat: 50.2115
+    lng: -5.4810
+participants:
+  - name: Elizabeth
+    phone: ""  # Fill in before trip
+  - name: Jessica
+    phone: ""
+  - name: Kevin
+    phone: ""
+  - name: Grant
+    phone: ""

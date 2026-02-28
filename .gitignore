@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+.venv/
+venv/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+.terraform.lock.hcl
+
+# Environment
+.env
+*.tfvars
+!*.tfvars.example
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Export output
+export/
+
+# Test fixtures (large files)
+scripts/simulate/fixtures/sample_photos/*.jpg
+scripts/simulate/fixtures/sample_photos/*.png
