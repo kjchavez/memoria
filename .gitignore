@@ -27,7 +27,7 @@ venv/
 Thumbs.db
 
 # Export output
-export/
+/export/
 
 # Test fixtures (large files)
 scripts/simulate/fixtures/sample_photos/*.jpg
