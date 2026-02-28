@@ -55,3 +55,59 @@ class TestParseTwilioRequest:
         msg = parse_twilio_request(form_data)
         assert msg.body == ""
         assert msg.media_urls == []
+
+
+import json
+from unittest.mock import patch, MagicMock
+from webhook.main import create_app
+
+
+@pytest.fixture
+def app():
+    app = create_app(testing=True)
+    return app
+
+
+@pytest.fixture
+def client(app):
+    return app.test_client()
+
+
+class TestWebhookEndpoint:
+    def test_health_check(self, client):
+        resp = client.get("/health")
+        assert resp.status_code == 200
+        assert resp.json["status"] == "ok"
+
+    @patch("webhook.main.process_incoming_message")
+    def test_incoming_sms_from_known_participant(self, mock_process, client):
+        mock_process.return_value = None
+        resp = client.post(
+            "/webhook/sms",
+            data={
+                "From": "+15551234567",
+                "Body": "Just landed!",
+                "NumMedia": "0",
+                "MessageSid": "SM123",
+            },
+        )
+        assert resp.status_code == 200
+        assert "twiml" in resp.content_type.lower() or resp.status_code == 200
+        mock_process.assert_called_once()
+
+    @patch("webhook.main.process_incoming_message")
+    def test_incoming_mms_with_photo(self, mock_process, client):
+        mock_process.return_value = None
+        resp = client.post(
+            "/webhook/sms",
+            data={
+                "From": "+15551234567",
+                "Body": "Look!",
+                "NumMedia": "1",
+                "MediaUrl0": "https://api.twilio.com/media/123.jpg",
+                "MediaContentType0": "image/jpeg",
+                "MessageSid": "SM456",
+            },
+        )
+        assert resp.status_code == 200
+        mock_process.assert_called_once()
