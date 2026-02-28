@@ -1,6 +1,8 @@
 from __future__ import annotations
 from dataclasses import dataclass
 
+from shared.models import TripConfig, Participant
+
 
 @dataclass
 class TwilioMessage:
@@ -30,3 +32,8 @@ def parse_twilio_request(form_data: dict) -> TwilioMessage:
         media_content_types=media_content_types,
         message_sid=form_data.get("MessageSid", ""),
     )
+
+
+def validate_sender(phone: str, config: TripConfig) -> Participant | None:
+    """Validate that a phone number belongs to a registered participant."""
+    return config.find_participant(phone)

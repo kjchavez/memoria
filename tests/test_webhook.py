@@ -1,5 +1,6 @@
 import pytest
-from webhook.twilio_handler import parse_twilio_request, TwilioMessage
+from webhook.twilio_handler import parse_twilio_request, TwilioMessage, validate_sender
+from shared.models import TripConfig
 
 
 class TestParseTwilioRequest:
@@ -57,9 +58,33 @@ class TestParseTwilioRequest:
         assert msg.media_urls == []
 
 
+class TestValidateSender:
+    def test_known_sender_returns_participant(self):
+        config = TripConfig.from_dict({
+            "id": "test", "title": "Test", "destination": "Test",
+            "dates": {"start": "2026-05-21", "end": "2026-05-28"},
+            "timezone": "UTC", "locations": [],
+            "participants": [{"name": "Kevin", "phone": "+15551234567"}],
+        })
+        result = validate_sender("+15551234567", config)
+        assert result is not None
+        assert result.name == "Kevin"
+
+    def test_unknown_sender_returns_none(self):
+        config = TripConfig.from_dict({
+            "id": "test", "title": "Test", "destination": "Test",
+            "dates": {"start": "2026-05-21", "end": "2026-05-28"},
+            "timezone": "UTC", "locations": [],
+            "participants": [{"name": "Kevin", "phone": "+15551234567"}],
+        })
+        result = validate_sender("+19999999999", config)
+        assert result is None
+
+
 import json
 from unittest.mock import patch, MagicMock
 from webhook.main import create_app
+from webhook.storage import download_and_store_media
 
 
 @pytest.fixture
@@ -111,3 +136,23 @@ class TestWebhookEndpoint:
         )
         assert resp.status_code == 200
         mock_process.assert_called_once()
+
+
+class TestDownloadAndStoreMedia:
+    @patch("webhook.storage.upload_blob")
+    @patch("webhook.storage.requests.get")
+    def test_downloads_and_stores(self, mock_get, mock_upload):
+        mock_response = MagicMock()
+        mock_response.content = b"image-data"
+        mock_response.raise_for_status = MagicMock()
+        mock_get.return_value = mock_response
+
+        path = download_and_store_media(
+            trip_id="uk-2026",
+            media_url="https://api.twilio.com/media/123.jpg",
+            content_type="image/jpeg",
+            timestamp="20260522_143022",
+            sender_name="Kevin",
+        )
+        assert path == "uk-2026/raw/20260522_143022_kevin.jpg"
+        mock_upload.assert_called_once()
