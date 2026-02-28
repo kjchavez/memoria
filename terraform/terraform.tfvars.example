@@ -1,0 +1,7 @@
+project_id         = "your-gcp-project-id"
+region             = "us-central1"
+twilio_account_sid = "ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+twilio_auth_token  = "your-twilio-auth-token"
+anthropic_api_key  = "sk-ant-api-your-key"
+batch_schedule     = "0 2 * * *"
+batch_timezone     = "Europe/London"
