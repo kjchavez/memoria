@@ -1,0 +1,9 @@
+# Dev/test environment
+# Usage: terraform plan -var-file=environments/dev.tfvars
+project_id         = "memoria-dev"
+region             = "us-central1"
+twilio_account_sid = ""
+twilio_auth_token  = ""
+anthropic_api_key  = ""
+batch_schedule     = "0 2 * * *"
+batch_timezone     = "America/Los_Angeles"
